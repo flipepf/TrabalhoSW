@@ -7,6 +7,7 @@ module.exports =  class ProdutoDAO{
 
     add(Produto){
         this.Produtos[Produto.id] = Produto;
+        return Produto;
     }
 
     getAll(){
@@ -23,6 +24,7 @@ module.exports =  class ProdutoDAO{
 
     update(Produto){
         this.Produtos[Produto.id] = Produto;
+        return Produto;
     }
-
+    
 }

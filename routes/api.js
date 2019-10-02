@@ -17,4 +17,32 @@ router.get('/produtos', function(req, res) {
    res.send(dao.getAll())
 })
 
+/* POST */
+router.post('/produtos', function(req, res) {
+   var envio = req.body
+   var Produto2 = new Produto(envio.id, envio.nome, envio.descricao, envio.preco, envio.categoria)
+   var resposta = dao.add(Produto2)
+   res.send(JSON.stringify(resposta))
+   
+})
+
+/* PUT */
+router.put('/produtos/:id', function(req, res) {
+   var envio = req.body
+   var id = req.params.id
+   var obj = dao.get(id)
+   obj = envio
+   //obj = envio.id, envio.nome, envio.descricao, envio.preco, envio.categoria
+   var resposta = dao.update(obj)
+   res.send(JSON.stringify(resposta))
+})
+
+/* DELETE */
+router.delete('/produtos/:id', function(req, res) {
+   var id = req.params.id
+   dao.remove(id)
+   res.send("produto eliminado")
+})
+
+
 module.exports = router
