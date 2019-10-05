@@ -2,29 +2,40 @@ const Produto = require('./Produto');
 
 module.exports =  class ProdutoDAO{
     constructor(  ){
-        this.Produtos = [];
+        this.Produtos = []
     }
 
     add(Produto){
-        this.Produtos[Produto.id] = Produto;
-        return Produto;
+        this.Produtos[(this.Produtos.length)] = Produto
+        return Produto
     }
 
-    getAll(){
-        return this.Produtos;
-    }
+    getAll(){ return this.Produtos }
     
-    get(id){
-        return this.Produtos[id];
-    }
-
     remove(id){
-        this.Produtos.splice(id,1);
+        var index = this.getIndex(id)
+        if (index!=null) this.Produtos.splice(index,1)
+        return index
     }
 
-    update(Produto){
-        this.Produtos[Produto.id] = Produto;
-        return Produto;
+    update(Produto, id){
+        var index = this.getIndex(id)
+        if (index!=null) this.Produtos[index] = Produto
+        else return index
+        return Produto
     }
-    
+
+    getById(id){
+        for (var i=0; i<this.Produtos.length; i++) {
+            if (this.Produtos[i].id === id) return this.Produtos[i]
+        }
+        return null
+    }
+
+    getIndex(id){
+        for (var i=0; i<this.Produtos.length; i++) {
+            if (this.Produtos[i].id === id) return i 
+        }
+        return null
+    }
 }

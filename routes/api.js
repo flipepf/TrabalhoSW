@@ -6,12 +6,6 @@ const ProdutoDao = require('../Model/ProdutoDAO')
 
 var dao = new ProdutoDao();
 
-var Produto1 = new Produto(0, 'Frango Teriaki', 'Frango com molho shoio ', 18.99, 'Pratos Quentes' )
-var Produto2 = new Produto(1, 'Yaksoba Vegetariano', 'yaksoba sem carne ', 15.99, 'Pratos Quentes' )
-var Produto3 = new Produto(2, 'Uramaki de Salmão', 'Enrolado de arroz com file de salmão ', 20.99, 'Uramakis' )
-var Produto4 = new Produto(3, 'Temaki California', 'Canudo de arroz com pepino, manga e kani', 18.99, 'Temaki' )
-
-dao.add(Produto1)
 /* GET */
 router.get('/produtos', function(req, res) {
    res.send(dao.getAll())
@@ -19,30 +13,35 @@ router.get('/produtos', function(req, res) {
 
 /* POST */
 router.post('/produtos', function(req, res) {
-   var envio = req.body
-   var Produto2 = new Produto(envio.id, envio.nome, envio.descricao, envio.preco, envio.categoria)
-   var resposta = dao.add(Produto2)
-   res.send(JSON.stringify(resposta))
-   
+   if (req.body.constructor === Object && Object.keys(req.body).length === 0){
+      res.send("Objeto vazio")
+   } else {
+      var envio = req.body //PEGA O CONTEUDO PASSADO NA REQUISIÇÃO
+      var Prod = new Produto(envio.id, envio.nome, envio.descricao, envio.preco, envio.categoria) //CRIA O OBJETO COM O CONTEÚDO PASSADO NA REQUISIÇÃO
+      var resposta = dao.add(Prod) //ARMAZENA O OBJETO NO ARRAY
+      res.send(JSON.stringify(resposta))
+   }
 })
 
 /* PUT */
 router.put('/produtos/:id', function(req, res) {
-   var envio = req.body
-   var id = req.params.id
-   var obj = dao.get(id)
-   obj = envio
-   //obj = envio.id, envio.nome, envio.descricao, envio.preco, envio.categoria
-   var resposta = dao.update(obj)
-   res.send(JSON.stringify(resposta))
+   if (req.body.constructor === Object && Object.keys(req.body).length === 0){
+      res.send("Objeto vazio")
+   } else { 
+      var obj = req.body //PEGA O CONTEUDO PASSADO NA REQUISIÇÃO
+      var id = req.params.id //PEGA O ID PASSADO POR PARAMETRO
+      var resposta = dao.update(obj, parseInt(id)) //REALIZA O UPDATE
+      if (resposta!=null) res.send(JSON.stringify(resposta))
+      else res.send("Produto não localizado")
+   }
 })
 
 /* DELETE */
 router.delete('/produtos/:id', function(req, res) {
-   var id = req.params.id
-   dao.remove(id)
-   res.send("produto eliminado")
+   var id = req.params.id //PEGA O ID PASSADO POR PARAMETRO
+   var index = dao.remove(parseInt(id));
+   if (index!=null) res.send("Produto de ID: "+id+" removido!")
+   else res.send("Produto não localizado")
 })
-
 
 module.exports = router
