@@ -6,8 +6,10 @@ module.exports =  class ProdutoDAO{
     }
 
     add(Produto){
-        this.Produtos[(this.Produtos.length)] = Produto
-        return Produto
+        if (this.getById(Produto.id)===null){
+            this.Produtos[(this.Produtos.length)] = Produto
+            return Produto
+        } else return null
     }
 
     getAll(){ return this.Produtos }

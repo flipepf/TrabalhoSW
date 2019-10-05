@@ -11,6 +11,11 @@ router.get('/produtos', function(req, res) {
    res.send(dao.getAll())
 })
 
+router.get('/produtos/:id', function(req, res) {
+   var id = req.params.id
+   res.send(dao.getById(parseInt(id)))
+})
+
 /* POST */
 router.post('/produtos', function(req, res) {
    if (req.body.constructor === Object && Object.keys(req.body).length === 0){
@@ -19,7 +24,8 @@ router.post('/produtos', function(req, res) {
       var envio = req.body //PEGA O CONTEUDO PASSADO NA REQUISIÇÃO
       var Prod = new Produto(envio.id, envio.nome, envio.descricao, envio.preco, envio.categoria) //CRIA O OBJETO COM O CONTEÚDO PASSADO NA REQUISIÇÃO
       var resposta = dao.add(Prod) //ARMAZENA O OBJETO NO ARRAY
-      res.send(JSON.stringify(resposta))
+      if (resposta!=null) res.send(JSON.stringify(resposta))
+      else res.send("ID "+envio.id+" já cadastrado")
    }
 })
 
@@ -38,7 +44,7 @@ router.put('/produtos/:id', function(req, res) {
 
 /* DELETE */
 router.delete('/produtos/:id', function(req, res) {
-   var id = req.params.id //PEGA O ID PASSADO POR PARAMETRO
+   var id = req.params.id
    var index = dao.remove(parseInt(id));
    if (index!=null) res.send("Produto de ID: "+id+" removido!")
    else res.send("Produto não localizado")
