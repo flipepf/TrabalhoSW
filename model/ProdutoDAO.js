@@ -1,7 +1,9 @@
-const Produto = require('./Produto');
+const Produto = require('./Produto')
+const { rastro } = require('rastrojs')
+var express = require('express')
 
 module.exports =  class ProdutoDAO{
-    constructor(  ){
+    constructor(){
         this.Produtos = []
     }
 

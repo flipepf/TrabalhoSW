@@ -1,8 +1,12 @@
 var express = require('express')
 var router = express.Router()
 
+var jwt = require('jsonwebtoken') //para usar a API
+const SECRET = 'senha'
+
 const Produto = require('../Model/Produto')
 const ProdutoDao = require('../Model/ProdutoDAO')
+const auth = require('../middlewares/authenctication')
 
 var dao = new ProdutoDao();
 
@@ -65,7 +69,7 @@ router.put('/produtos/:id', function(req, res) {
 /* DELETE */
 router.delete('/produtos/:id', function(req, res) {
    var id = req.params.id
-   var index = dao.remove(parseInt(id));
+   var index = dao.remove(parseInt(id))
    if (index!=null) {
       res.status(200)
       res.send("Produto de ID: "+id+" removido!")
@@ -75,5 +79,42 @@ router.delete('/produtos/:id', function(req, res) {
       res.send("Produto não localizado")
    }
 })
+
+//############################################################# LOGIN
+router.post('/login', function(req, res) { 
+   console.log('login...')   
+   if (req.body.user ==='aluno' && req.body.pass ==='ifsul'){
+      var payload = {
+         user: req.body.user,
+         role: 'admin',
+         id: 1
+      }
+      var token = jwt.sign(payload, SECRET, { expiresIn: '5m'})
+
+      res.status(200).send({ token: token})
+      console.log('usuario logado...')
+   } else {
+      res.status(401).send({ user: 'user', pass: 'pass'})
+   }
+})
+
+router.get('/session', verificaToken, function (req, res, next) {
+   var data = req.userData
+   res.statusCode = 200
+    res.send('Token OK')
+  })
+  
+function verificaToken(req, res, next) {
+   var token = req.headers.authorization;
+   if (!token)
+     return res.status(401).send({ message: 'Token não foi fornecido.' });
+   
+   jwt.verify(token, SECRET, function (err, payload) {
+     if (err)
+       return res.status(403).send({ auth: false, message: 'Failed to authenticate token.' });
+     req.userData = payload;
+     next();
+   })
+}
 
 module.exports = router
