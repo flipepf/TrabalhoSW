@@ -30,7 +30,7 @@ router.get('/produtos/:id', function(req, res) {
 /* POST */
 router.post('/produtos', function(req, res) {
    if (!isLogin){
-      res.status(200).send({ status: 200, message: "Necessário efetuar login para acessar este recurso!"})
+      res.status(403).send({ status: 403, message: "Necessário efetuar login para acessar este recurso!"})
    } else {
       if (req.body.constructor === Object && Object.keys(req.body).length === 0){
          res.status(400).send({ status: 400, message: "Parametro vazio" })
@@ -50,7 +50,7 @@ router.post('/produtos', function(req, res) {
 /* PUT */
 router.put('/produtos/:id', function(req, res) {
    if (!isLogin){
-      res.status(200).send({ status: 200, message: "Necessário efetuar login para acessar este recurso!"})
+      res.status(403).send({ status: 403, message: "Necessário efetuar login para acessar este recurso!"})
    } else {      
       if (req.body.constructor === Object && Object.keys(req.body).length === 0){
          res.status(400).send({ status: 400, message: "Parametro vazio" })
@@ -70,7 +70,7 @@ router.put('/produtos/:id', function(req, res) {
 /* DELETE */
 router.delete('/produtos/:id', function(req, res) {
    if (!isLogin){
-      res.status(200).send({ status: 200, message: "Necessário efetuar login para acessar este recurso!"})
+      res.status(403).send({ status: 403, message: "Necessário efetuar login para acessar este recurso!"})
    } else {     
       var id = req.params.id
       var index = dao.remove(parseInt(id))
